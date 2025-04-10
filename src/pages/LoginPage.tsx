@@ -33,7 +33,8 @@ export const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 p-4">
       <Card className="w-full max-w-md animate-fade-in">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Dorm Hub System</CardTitle>
+          <img src="boholDorm.png" alt="bohol dorm" width={200} className="mx-auto"/>
+          <CardTitle className="text-2xl font-bold">Dormer PH</CardTitle>
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>

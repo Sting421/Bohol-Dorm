@@ -64,6 +64,8 @@ export const rooms: Room[] = [
     capacity: 1,
     price: 500,
     status: 'occupied',
+    description: 'Cozy single room with modern amenities and natural lighting',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Private Bathroom', 'Desk'],
     tenantIds: ['1']
   },
@@ -74,6 +76,8 @@ export const rooms: Room[] = [
     capacity: 1,
     price: 550,
     status: 'occupied',
+    description: 'Comfortable single room featuring additional storage and mini fridge',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Private Bathroom', 'Desk', 'Mini Fridge'],
     tenantIds: ['2']
   },
@@ -84,6 +88,8 @@ export const rooms: Room[] = [
     capacity: 2,
     price: 800,
     status: 'occupied',
+    description: 'Spacious double room with shared facilities and study area',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Shared Bathroom', 'Desk'],
     tenantIds: ['3']
   },
@@ -94,6 +100,8 @@ export const rooms: Room[] = [
     capacity: 2,
     price: 850,
     status: 'occupied',
+    description: 'Well-equipped double room with modern furnishings',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Shared Bathroom', 'Desk', 'Mini Fridge'],
     tenantIds: ['4']
   },
@@ -104,6 +112,8 @@ export const rooms: Room[] = [
     capacity: 3,
     price: 1200,
     status: 'occupied',
+    description: 'Deluxe triple room with private balcony and scenic views',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Private Bathroom', 'Desk', 'Mini Fridge', 'Balcony'],
     tenantIds: ['5']
   },
@@ -114,6 +124,8 @@ export const rooms: Room[] = [
     capacity: 3,
     price: 1250,
     status: 'available',
+    description: 'Premium triple room featuring modern amenities and private outdoor space',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Private Bathroom', 'Desk', 'Mini Fridge', 'Balcony'],
     tenantIds: []
   },
@@ -124,6 +136,8 @@ export const rooms: Room[] = [
     capacity: 4,
     price: 1600,
     status: 'available',
+    description: 'Luxury quad room with full kitchenette and premium furnishings',
+    photo: '/placeholder.svg',
     amenities: ['Air Conditioning', 'Private Bathroom', 'Desk', 'Mini Fridge', 'Balcony', 'Kitchenette'],
     tenantIds: []
   }

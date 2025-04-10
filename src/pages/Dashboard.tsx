@@ -47,7 +47,7 @@ export const Dashboard = () => {
         />
         <StatsCard
           title="Total Revenue"
-          value={`$${dashboardStats.totalRevenue.toLocaleString()}`}
+          value={`₱${dashboardStats.totalRevenue.toLocaleString()}`}
           icon={<TrendingUp className="h-5 w-5" />}
         />
       </div>
@@ -71,7 +71,7 @@ export const Dashboard = () => {
                     <div key={payment.id} className="flex justify-between items-center border-b pb-3 last:border-0">
                       <div>
                         <p className="font-medium">{tenant?.name}</p>
-                        <p className="text-sm text-muted-foreground">Room {room?.number} - ${payment.amount}</p>
+                        <p className="text-sm text-muted-foreground">Room {room?.number} - ₱{payment.amount}</p>
                       </div>
                       <div className="text-right">
                         <div className={`status-${payment.status}`}>
@@ -111,7 +111,7 @@ export const Dashboard = () => {
                         <p className="text-sm text-muted-foreground">{payment.description}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">${payment.amount}</p>
+                        <p className="font-medium">₱{payment.amount}</p>
                         <p className="text-sm text-muted-foreground">
                           {payment.paidDate 
                             ? `Paid ${new Date(payment.paidDate).toLocaleDateString()}` 

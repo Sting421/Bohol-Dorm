@@ -21,6 +21,8 @@ export type Room = {
   capacity: number;
   price: number;
   status: RoomStatus;
+  description: string;
+  photo: string;
   amenities: string[];
   tenantIds: string[];
 };

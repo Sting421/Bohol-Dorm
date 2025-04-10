@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import { TenantsPage } from "@/pages/TenantsPage";
 import { RoomsPage } from "@/pages/RoomsPage";
 import { PaymentsPage } from "@/pages/PaymentsPage";
 import { NotFound } from "@/pages/NotFound";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +37,9 @@ const AppRoutes = () => {
         path="/dashboard" 
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <DashboardLayout>
+              <Dashboard />
+            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -45,7 +47,9 @@ const AppRoutes = () => {
         path="/tenants" 
         element={
           <ProtectedRoute>
-            <TenantsPage />
+            <DashboardLayout>
+              <TenantsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -53,7 +57,9 @@ const AppRoutes = () => {
         path="/rooms" 
         element={
           <ProtectedRoute>
-            <RoomsPage />
+            <DashboardLayout>
+              <RoomsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -61,7 +67,9 @@ const AppRoutes = () => {
         path="/payments" 
         element={
           <ProtectedRoute>
-            <PaymentsPage />
+            <DashboardLayout>
+              <PaymentsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -70,18 +78,20 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
