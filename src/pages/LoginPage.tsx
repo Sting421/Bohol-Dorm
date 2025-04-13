@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -30,12 +31,28 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 p-4">
-      <Card className="w-full max-w-md animate-fade-in">
-        <CardHeader className="text-center">
-          <img src="boholDorm.png" alt="bohol dorm" width={200} className="mx-auto"/>
-          <CardTitle className="text-2xl font-bold">Dormer PH</CardTitle>
-          <CardDescription>Sign in to your account to continue</CardDescription>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 p-4">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-grid-black/[0.02] -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50" />
+      
+      <Card className="w-full max-w-md animate-fade-up shadow-xl bg-white/95 backdrop-blur">
+        <CardHeader className="text-center space-y-4">
+          <div className="mx-auto relative w-[180px] h-[180px] sm:w-[200px] sm:h-[200px]">
+            <img 
+              src="boholDorm.png" 
+              alt="bohol dorm" 
+              className="w-full h-full object-contain drop-shadow-md transition-transform duration-300 hover:scale-105"
+            />
+          </div>
+          <div className="space-y-2">
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              Dormer PH
+            </CardTitle>
+            <CardDescription className="text-base">
+              Sign in to your account to continue
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,13 +85,23 @@ export const LoginPage = () => {
                 </ul>
               </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
+              <Button
+                type="submit"
+                className="w-full relative overflow-hidden transition-all duration-300"
+                disabled={isLoading}
+              >
+                <span className={cn(
+                  "inline-flex items-center transition-all duration-300",
+                  isLoading && "opacity-0"
+                )}>
+                  Sign In
+                </span>
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+              </Button>
           </form>
         </CardContent>
       </Card>

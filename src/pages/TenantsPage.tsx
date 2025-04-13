@@ -55,7 +55,7 @@ export const TenantsPage = () => {
   const renderContent = () => {
     if (isMobile) {
       return (
-        <div className="grid gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
           {filteredTenants.length === 0 ? (
             <Card>
               <CardContent className="text-center py-6 text-muted-foreground">
@@ -69,13 +69,15 @@ export const TenantsPage = () => {
               const nextDue = new Date(joinDate.getFullYear(), joinDate.getMonth() + 1, joinDate.getDate());
               
               return (
-                <Card key={tenant.id}>
+                <Card key={tenant.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
+                    <div className="flex justify-between items-start space-y-2">
+                      <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          <span className="font-semibold">{tenant.name}</span>
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <User className="h-4 w-4 text-primary" />
+                          </div>
+                          <span className="font-semibold text-base">{tenant.name}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Home className="h-4 w-4" />
@@ -90,10 +92,10 @@ export const TenantsPage = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-4 pt-4">
                     <div>
-                      <div className="text-sm text-muted-foreground">Contact Information</div>
-                      <div className="space-y-1 mt-1">
+                      <div className="text-sm font-medium text-muted-foreground">Contact Information</div>
+                      <div className="space-y-2 mt-2">
                         <div className="flex items-center gap-2 text-sm">
                           <Mail className="h-4 w-4" />
                           <span>{tenant.email}</span>
@@ -105,8 +107,8 @@ export const TenantsPage = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Dates</div>
-                      <div className="space-y-1 mt-1">
+                      <div className="text-sm font-medium text-muted-foreground">Dates</div>
+                      <div className="space-y-2 mt-2">
                         <div className="flex items-center gap-2 text-sm">
                           <CalendarIcon className="h-4 w-4" />
                           <span>Joined: {new Date(tenant.dateJoined).toLocaleDateString()}</span>
@@ -118,7 +120,7 @@ export const TenantsPage = () => {
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter className="flex gap-2 justify-end">
+                  <CardFooter className="flex gap-2 justify-end border-t pt-4">
                     <Button variant="ghost" size="sm">View</Button>
                     {isAdmin() && (
                       <>

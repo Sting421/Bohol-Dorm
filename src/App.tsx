@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LoginPage } from "@/pages/LoginPage";
@@ -10,7 +11,6 @@ import { TenantsPage } from "@/pages/TenantsPage";
 import { RoomsPage } from "@/pages/RoomsPage";
 import { PaymentsPage } from "@/pages/PaymentsPage";
 import { NotFound } from "@/pages/NotFound";
-import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -37,9 +37,7 @@ const AppRoutes = () => {
         path="/dashboard" 
         element={
           <ProtectedRoute>
-            <DashboardLayout>
               <Dashboard />
-            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -47,9 +45,7 @@ const AppRoutes = () => {
         path="/tenants" 
         element={
           <ProtectedRoute>
-            <DashboardLayout>
               <TenantsPage />
-            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -57,9 +53,7 @@ const AppRoutes = () => {
         path="/rooms" 
         element={
           <ProtectedRoute>
-            <DashboardLayout>
               <RoomsPage />
-            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -67,9 +61,7 @@ const AppRoutes = () => {
         path="/payments" 
         element={
           <ProtectedRoute>
-            <DashboardLayout>
               <PaymentsPage />
-            </DashboardLayout>
           </ProtectedRoute>
         } 
       />
@@ -79,6 +71,11 @@ const AppRoutes = () => {
 };
 
 const App = () => {
+  // Add dark mode to root element for Tailwind dark mode support
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
