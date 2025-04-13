@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import supabase from '@/lib/supabase';
 
 type User = {
   id: string;
@@ -19,21 +20,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Demo users for our application
-const DEMO_USERS: User[] = [
-  {
-    id: '1',
-    name: 'Admin User',
-    email: 'admin@dormhub.com',
-    role: 'admin',
-  },
-  {
-    id: '2',
-    name: 'Staff User',
-    email: 'staff@dormhub.com',
-    role: 'staff',
-  },
-];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -52,18 +38,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Find user by email (in a real app, you'd validate password too)
-      const foundUser = DEMO_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
-      
-      if (foundUser) {
-        setUser(foundUser);
-        localStorage.setItem('dormhub_user', JSON.stringify(foundUser));
-        toast.success(`Welcome back, ${foundUser.name}`);
-      } else {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
         toast.error('Invalid credentials');
+        console.error(error);
+      } else if (data.user) {
+        const authenticatedUser: User = {
+          id: data.user.id,
+          name: data.user.user_metadata?.name || 'User',
+          email: data.user.email,
+          role: data.user.user_metadata?.role || 'staff',
+        };
+        setUser(authenticatedUser);
+        localStorage.setItem('dormhub_user', JSON.stringify(authenticatedUser));
+        toast.success(`Welcome back, ${authenticatedUser.name}`);
       }
     } catch (error) {
       toast.error('Login failed');

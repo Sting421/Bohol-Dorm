@@ -1,4 +1,10 @@
 
+export type Database = {
+  rooms: Room;
+  tenants: Tenant;
+  payments: Payment;
+};
+
 // Tenant types
 export type Tenant = {
   id: string;
@@ -16,15 +22,13 @@ export type RoomStatus = 'available' | 'occupied';
 
 export type Room = {
   id: string;
-  number: string;
-  floor: string;
+  dorm_id: string;
+  room_number: string;
   capacity: number;
-  price: number;
-  status: RoomStatus;
-  description: string;
-  photo: string;
-  amenities: string[];
-  tenantIds: string[];
+  rent_amount: number;
+  images: string[];
+  created_at: string;
+  updated_at: string;
 };
 
 // Payment types

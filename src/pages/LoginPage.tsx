@@ -77,13 +77,7 @@ export const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <div className="text-sm text-muted-foreground">
-                Demo credentials:
-                <ul className="list-disc pl-5 mt-1">
-                  <li>Admin: admin@dormhub.com (any password)</li>
-                  <li>Staff: staff@dormhub.com (any password)</li>
-                </ul>
-              </div>
+              
             </div>
               <Button
                 type="submit"
