@@ -3,22 +3,20 @@ export type Database = {
   rooms: Room;
   tenants: Tenant;
   payments: Payment;
+  dorm: Dorm;
 };
 
-// Tenant types
-export type Tenant = {
+export type Dorm = {
   id: string;
+  owner_id: string;
   name: string;
-  email: string;
-  phone: string;
   address: string;
-  emergencyContact: string;
-  dateJoined: string;
-  roomId?: string;
+  longitude: string;
+  latitude: string;
+  contacts: string;
+  created_at: string;
+  updated_at: string;
 };
-
-// Room types
-export type RoomStatus = 'available' | 'occupied';
 
 export type Room = {
   id: string;
@@ -29,20 +27,47 @@ export type Room = {
   images: string[];
   created_at: string;
   updated_at: string;
+  tenants?: Tenant[];
 };
 
-// Payment types
-export type PaymentStatus = 'pending' | 'paid' | 'overdue';
+export type Tenant = {
+  id: string;
+  user_id: string;
+  room_id: string;
+  full_name: string;
+  email: string;
+  move_in_date: string;
+  created_at: string;
+  updated_at: string;
+  room?: Room;
+};
+
+export type PaymentStatus = 'pending' | 'completed' | 'failed';
+
+export interface GoogleUser {
+  id: string;
+  full_name: string;
+  email: string;
+  created_at: string;
+  provider: string;
+}
 
 export type Payment = {
   id: string;
-  tenantId: string;
-  roomId: string;
+  tenant_id: string;
   amount: number;
-  dueDate: string;
-  paidDate?: string;
+  payment_date: string;
   status: PaymentStatus;
-  description: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+  tenant?: {
+    id: string;
+    full_name: string;
+    room?: {
+      room_number: string;
+    };
+  };
 };
 
 // Dashboard types

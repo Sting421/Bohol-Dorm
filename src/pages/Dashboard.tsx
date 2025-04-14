@@ -1,26 +1,56 @@
 
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Users, Home, CreditCard, AlertCircle,
-  TrendingUp, Calendar
+  TrendingUp, Calendar, Loader2
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { StatsCard } from '@/components/stats/StatsCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { dashboardStats, payments, rooms, tenants } from '@/lib/data';
+import { DashboardStats, Payment, Room } from '@/lib/types';
+import { getDashboardStats, getRecentPayments, getUpcomingPayments, getRoomsWithTenants } from '@/lib/supabase';
 
 export const Dashboard = () => {
-  // Get recent payments - last 5
-  const recentPayments = [...payments]
-    .sort((a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime())
-    .slice(0, 5);
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [recentPayments, setRecentPayments] = useState<Payment[]>([]);
+  const [upcomingPayments, setUpcomingPayments] = useState<Payment[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
 
-  // Get upcoming payments that are due
-  const upcomingPayments = payments
-    .filter(payment => payment.status !== 'paid')
-    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-    .slice(0, 5);
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [statsData, recentData, upcomingData, roomsData] = await Promise.all([
+          getDashboardStats(),
+          getRecentPayments(),
+          getUpcomingPayments(),
+          getRoomsWithTenants()
+        ]);
+        
+        setStats(statsData);
+        setRecentPayments(recentData || []);
+        setUpcomingPayments(upcomingData || []);
+        setRooms(roomsData || []);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+    </DashboardLayout>
+  );
+  }
 
   return (
     <DashboardLayout>
@@ -32,22 +62,22 @@ export const Dashboard = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Tenants"
-          value={dashboardStats.totalTenants}
+          value={stats?.totalTenants || 0}
           icon={<Users className="h-5 w-5" />}
         />
         <StatsCard
           title="Available Rooms"
-          value={dashboardStats.availableRooms}
+          value={stats?.availableRooms || 0}
           icon={<Home className="h-5 w-5" />}
         />
         <StatsCard
           title="Occupied Rooms"
-          value={dashboardStats.occupiedRooms}
+          value={stats?.occupiedRooms || 0}
           icon={<Home className="h-5 w-5" />}
         />
         <StatsCard
           title="Total Revenue"
-          value={`₱${dashboardStats.totalRevenue.toLocaleString()}`}
+          value={`₱${(stats?.totalRevenue || 0).toLocaleString()}`}
           icon={<TrendingUp className="h-5 w-5" />}
         />
       </div>
@@ -64,21 +94,18 @@ export const Dashboard = () => {
             {upcomingPayments.length > 0 ? (
               <div className="space-y-4">
                 {upcomingPayments.map(payment => {
-                  const tenant = tenants.find(t => t.id === payment.tenantId);
-                  const room = rooms.find(r => r.id === payment.roomId);
-                  
                   return (
                     <div key={payment.id} className="flex justify-between items-center border-b pb-3 last:border-0">
                       <div>
-                        <p className="font-medium">{tenant?.name}</p>
-                        <p className="text-sm text-muted-foreground">Room {room?.number} - ₱{payment.amount}</p>
+                        <p className="font-medium">{payment.tenant?.full_name}</p>
+                        <p className="text-sm text-muted-foreground">Room {payment.tenant?.room?.room_number} - ₱{payment.amount}</p>
                       </div>
                       <div className="text-right">
                         <div className={`status-${payment.status}`}>
                           {payment.status}
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Due {new Date(payment.dueDate).toLocaleDateString()}
+                          Due {new Date(payment.payment_date).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -102,20 +129,18 @@ export const Dashboard = () => {
             {recentPayments.length > 0 ? (
               <div className="space-y-4">
                 {recentPayments.map(payment => {
-                  const tenant = tenants.find(t => t.id === payment.tenantId);
-                  
                   return (
                     <div key={payment.id} className="flex justify-between items-center border-b pb-3 last:border-0">
                       <div>
-                        <p className="font-medium">{tenant?.name}</p>
+                        <p className="font-medium">{payment.tenant?.full_name}</p>
                         <p className="text-sm text-muted-foreground">{payment.description}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-medium">₱{payment.amount}</p>
                         <p className="text-sm text-muted-foreground">
-                          {payment.paidDate 
-                            ? `Paid ${new Date(payment.paidDate).toLocaleDateString()}` 
-                            : `Due ${new Date(payment.dueDate).toLocaleDateString()}`
+                          {payment.status === 'completed'
+                            ? `Paid ${new Date(payment.payment_date).toLocaleDateString()}` 
+                            : `Due ${new Date(payment.payment_date).toLocaleDateString()}`
                           }
                         </p>
                       </div>
@@ -128,6 +153,47 @@ export const Dashboard = () => {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-6">
+        <h2 className="text-2xl font-semibold mb-4">Rooms & Tenants</h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {rooms.map((room) => (
+            <Card key={room.id}>
+              <CardHeader>
+                <CardTitle className="text-lg font-medium">
+                  Room {room.room_number}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Capacity: {room.capacity}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Rent: ₱{room.rent_amount.toLocaleString()}
+                  </p>
+                  <div className="mt-4">
+                    <p className="font-medium mb-2">Tenants:</p>
+                    {room.tenants && room.tenants.length > 0 ? (
+                      <div className="space-y-3">
+                        {room.tenants.map((tenant) => (
+                          <div key={tenant.id} className="border-l-2 border-primary pl-3">
+                            <p className="font-medium">{tenant.full_name}</p>
+                            <p className="text-sm text-muted-foreground">{tenant.email}</p>
+                            <p className="text-sm text-muted-foreground">Since {new Date(tenant.move_in_date).toLocaleDateString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No tenants</p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </DashboardLayout>
   );
